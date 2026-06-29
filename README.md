@@ -18,3 +18,27 @@ Todos los porcentajes son editables tasación por tasación.
 ## Correr el proyecto en tu computadora
 
 Necesitás [Node.js](https://nodejs.org) (versión 18 o más nueva).
+Abrí `http://localhost:3000` en el navegador.
+
+## Desplegar en Render
+
+1. Entrá a [render.com](https://render.com) y conectá tu cuenta de GitHub.
+2. "New" → "Web Service" → elegí este repositorio.
+3. Render va a detectar `render.yaml` y configurar todo solo. Si no, configurá a mano:
+   - **Build command**: `npm install`
+   - **Start command**: `npm start`
+   - **Runtime**: Node
+
+### Importante sobre la persistencia de datos
+
+En el **plan gratuito de Render**, el disco se borra cada vez que el servicio se reinicia o "duerme" por inactividad — vas a perder las tasaciones guardadas cada tanto. Para que los datos queden guardados para siempre, Render requiere un plan pago con disco persistente (a partir de unos USD 7/mes, conviene confirmar el precio actual en render.com/pricing).
+
+## Colores de marca
+
+| Color | Uso |
+|---|---|
+| `#599F78` Verde sage | Color principal, botones, resultado |
+| `#3F7259` Verde oscuro | Hover, encabezados de resultado |
+| `#4A4C48` Carbón | Texto principal |
+| `#FAF8F4` Crema | Fondo general |
+| `#C1604A` Terracota | Alertas (zona inundable) |
