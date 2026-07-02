@@ -186,7 +186,19 @@ app.post('/api/calcular', (req, res) => {
   const analisis = analizarComparables(req.body.comparables || []);
   res.json({ calculo, analisis_comparables: analisis });
 });
+// ---------- Informe de tasación ----------
+const { generarHTML } = require('./informe-template');
 
+app.get('/informe/:id', (req, res) => {
+  const tasacion = db.obtenerTasacion(req.params.id);
+  if (!tasacion) return res.status(404).send('<h2>Tasación no encontrada</h2>');
+
+  const comparables = db.listarComparables(tasacion.id);
+  const calculo = calcularTasacion(tasacion);
+  const html = generarHTML(tasacion, comparables, calculo);
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
+});
 // ---------- Fallback al frontend ----------
 // Cualquier ruta que no sea /api/* y no coincida con un archivo estatico
 // devuelve el index.html (para que la navegacion del lado del cliente funcione).
