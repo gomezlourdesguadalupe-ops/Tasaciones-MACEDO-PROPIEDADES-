@@ -57,31 +57,29 @@ function formatoMoneda(valor) {
 function renderizarComparables() {
   const cont = document.getElementById('lista-comparables');
   cont.innerHTML = '';
-
-  comparablesActuales.forEach((c, i) => {
-    const fila = document.createElement('div');
-    fila.className = 'fila-comparable';
-    fila.innerHTML = `
-      <div class="campo">
-        <label>Dirección</label>
-        <input type="text" value="${c.direccion || ''}" data-campo="direccion" data-idx="${i}" placeholder="Dirección del comparable">
-      </div>
-      <div class="campo">
-        <label>m²</label>
-        <input type="number" min="0" step="0.01" value="${c.metros_cuadrados || ''}" data-campo="metros_cuadrados" data-idx="${i}">
-      </div>
-      <div class="campo">
-        <label>Precio</label>
-        <input type="number" min="0" step="0.01" value="${c.precio || ''}" data-campo="precio" data-idx="${i}">
-      </div>
-      <div class="campo">
-        <label>Características</label>
-        <input type="text" value="${c.caracteristicas || ''}" data-campo="caracteristicas" data-idx="${i}" placeholder="Ej: esquina, con servicios">
-      </div>
-      <button type="button" class="btn btn-peligro btn-chico" data-eliminar="${i}">Quitar</button>
-    `;
-    cont.appendChild(fila);
-  });
+    tasaciones.forEach(t => {
+      const item = document.createElement('div');
+      item.className = 'item';
+      item.innerHTML = `
+        <div class="principal" style="cursor:pointer; flex:1;">
+          <strong>${t.direccion}</strong>
+          <span>${[t.barrio, t.ciudad].filter(Boolean).join(', ') || 'Sin barrio/ciudad'} · ${t.metros_cuadrados} m² · ${t.nombre_cliente || 'Sin cliente asignado'}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px;">
+          <div class="valores">
+            ${formatoMoneda(t.valor_min_calculado)} – ${formatoMoneda(t.valor_max_calculado)}
+            <span>Valor estimado</span>
+          </div>
+          <button class="btn-informe btn btn-secundario btn-chico">Ver informe</button>
+        </div>
+      `;
+      item.querySelector('.principal').addEventListener('click', () => abrirParaEditar(t.id));
+      item.querySelector('.btn-informe').addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(`/informe/${t.id}`, '_blank');
+      });
+      cont.appendChild(item);
+    });
 
   cont.querySelectorAll('input').forEach(input => {
     input.addEventListener('input', (e) => {
@@ -92,7 +90,6 @@ function renderizarComparables() {
       comparablesActuales[idx][campo] = valor;
       recalcular();
     });
-  });
 
   cont.querySelectorAll('[data-eliminar]').forEach(btn => {
     btn.addEventListener('click', () => {
